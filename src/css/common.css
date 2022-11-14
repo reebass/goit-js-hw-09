@@ -100,11 +100,13 @@ img {
 .value {
   background-color: #212121;
   color: #fafafa;
+  text-align: center;
   font-weight: 600;
   letter-spacing: 3px;
   font-size: 26px;
   line-height: calc(26 / 22);
   padding: 10px;
+  width: 60px;
 }
 
 .label {

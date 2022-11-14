@@ -11,13 +11,14 @@ refs = {
   hoursTimer: document.querySelector('[data-hours]'),
   minutesTimer: document.querySelector('[data-minutes]'),
   secondsTimer: document.querySelector('[data-seconds]'),
-
 }
+
+refs.btnStart.classList.add('btn-start')
 
 
 refs.btnStart.disabled = true;
-refs.btnStart.classList.add('btn-start')
 let differenceDete;
+let idInterval = null;
 
 
 const options = {
@@ -26,23 +27,22 @@ const options = {
     defaultDate: new Date(),
     minuteIncrement: 1,
     onClose(selectedDates) {
-      // console.dir(selectedDates[0]);
+      console.log(selectedDates[0]);
         if(Date.parse(selectedDates[0]) >= Date.parse(options.defaultDate)){
+          differenceDete = selectedDates[0]
           refs.btnStart.disabled = false;
-         differenceDete = Date.parse(selectedDates[0]) - Date.parse(options.defaultDate);
-         refs.daysTimer.textContent = convertMs(differenceDete).days.toString().padStart(2, '0');
-         refs.hoursTimer.textContent = convertMs(differenceDete).hours.toString().padStart(2, '0');
-         refs.minutesTimer.textContent = convertMs(differenceDete).minutes.toString().padStart(2, '0');
-         refs.secondsTimer.textContent = convertMs(differenceDete).seconds.toString().padStart(2, '0');
-
-
+        //  differenceDete = Date.parse(selectedDates[0]) - Date.parse(options.defaultDate);
+        //  refs.daysTimer.textContent = convertMs(differenceDete).days.toString().padStart(2, '0');
+        //  refs.hoursTimer.textContent = convertMs(differenceDete).hours.toString().padStart(2, '0');
+        //  refs.minutesTimer.textContent = convertMs(differenceDete).minutes.toString().padStart(2, '0');
+        //  refs.secondsTimer.textContent = convertMs(differenceDete).seconds.toString().padStart(2, '0');
       } else {
         refs.btnStart.disabled = true;
         Notify.warning('Please choose a date in the future');
-        refs.daysTimer.textContent = "00";
-         refs.hoursTimer.textContent = "00";
-         refs.minutesTimer.textContent = "00";
-         refs.secondsTimer.textContent = "00";
+        // refs.daysTimer.textContent = "00";
+        //  refs.hoursTimer.textContent = "00";
+        //  refs.minutesTimer.textContent = "00";
+        //  refs.secondsTimer.textContent = "00";
       }
     },
   };
@@ -66,12 +66,16 @@ const options = {
   refs.btnStart.addEventListener('click', onStartTimer);
 
   function onStartTimer() {
-    setInterval(()=>{
-      differenceDete = Date.parse(refs.input.value) - Date.now();
-          refs.daysTimer.textContent = convertMs(differenceDete).days.toString().padStart(2, '0');
-         refs.hoursTimer.textContent = convertMs(differenceDete).hours.toString().padStart(2, '0');
-         refs.minutesTimer.textContent = convertMs(differenceDete).minutes.toString().padStart(2, '0');
-         refs.secondsTimer.textContent = convertMs(differenceDete).seconds.toString().padStart(2, '0');
+    idInterval = setInterval(()=>{
+        let deltaDete = Date.parse(differenceDete) - Date.now();
+        if(deltaDete <= 1000) {
+          clearInterval(idInterval);
+          refs.btnStart.disabled = true;
+        }
+          refs.daysTimer.textContent = convertMs(deltaDete).days.toString().padStart(2, '0');
+         refs.hoursTimer.textContent = convertMs(deltaDete).hours.toString().padStart(2, '0');
+         refs.minutesTimer.textContent = convertMs(deltaDete).minutes.toString().padStart(2, '0');
+         refs.secondsTimer.textContent = convertMs(deltaDete).seconds.toString().padStart(2, '0');
     }, 1000)
   }
 
